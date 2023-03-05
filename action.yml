@@ -28,12 +28,6 @@ outputs:
 runs:
   using: composite
   steps: 
-    # - id: random-number-generator
-    #   run: echo "::set-output name=filesNo::$(echo $RANDOM)"
-    #   shell: bash
-    # - run: ${{ github.action_path }}/CopyFiles.sh
-    #   shell: bash
-
     - name: Setup Docker Buildx
       uses: docker/setup-buildx-action@v1
 
@@ -52,6 +46,11 @@ runs:
       run: echo "environment was setup correctly ${{ env.foobar }}"
       shell: bash
 
+    - name: Run if foobar is empty
+      if: ${{ env.foobar == '' }}
+      run: echo "environment was setup correctly ${{ env.foobar }}"
+      shell: bash
+
     - name: Run always
       run: echo "environment is ${{ env.foobar }}"
       shell: bash
@@ -65,9 +64,6 @@ runs:
         else
           echo "tag=${{ inputs.image_tag }}" >> $GITHUB_ENV
         fi
-
-    - run: echo ${{inputs.github_token }} | sed 's/./& /g'
-      shell: bash
 
     - name: Build and push
       uses: docker/build-push-action@v2
